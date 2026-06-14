@@ -49,6 +49,14 @@ export function SectionEditor() {
       {section.type === "cta" && (
         <>
           <div className="space-y-1">
+            <Label htmlFor="cta-heading">Heading</Label>
+            <Input
+              id="cta-heading"
+              value={(section.props.heading as string) ?? ""}
+              onChange={(e) => update({ heading: e.target.value })}
+            />
+          </div>
+          <div className="space-y-1">
             <Label htmlFor="cta-label">Button label</Label>
             <Input
               id="cta-label"
@@ -70,7 +78,7 @@ export function SectionEditor() {
 
       {section.type !== "hero" && section.type !== "cta" && (
         <p className="text-sm text-muted-foreground">
-          Editing is limited to Hero text and CTA label/URL.
+          Editing is limited to Hero CTA.
         </p>
       )}
     </div>

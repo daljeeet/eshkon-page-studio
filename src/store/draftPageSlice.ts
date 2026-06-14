@@ -8,7 +8,7 @@ const initialState: DraftState = { page: null };
 
 const defaultProps: Record<SectionType, Record<string, unknown>> = {
   hero: { heading: "New heading", subheading: "" },
-  cta: { label: "Get started", url: "https://example.com" },
+  cta: { label: "Get started", url: "https://example.com", heading: "Join us now!" },
   featureGrid: { features: [{ title: "Feature", body: "Body" }] },
   testimonial: { quote: "Great product", author: "Anon" },
 };
