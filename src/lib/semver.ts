@@ -6,18 +6,8 @@ const ORDER: Record<Bump, number> = { none: 0, patch: 1, minor: 2, major: 3 };
 
 export interface DiffResult {
   bump: Bump;
-  /** Human-readable, deterministic list of what changed. */
   changes: string[];
 }
-
-/**
- * Deterministic diff between two page versions, following the brief's fixed rules:
- *   - major → remove section / change type / remove (break) a required prop
- *   - minor → add section / add a prop
- *   - patch → text/prop value change (or reorder / title change)
- * The result is order-independent w.r.t. how sections are listed, so the same
- * pair of pages always yields the same bump (idempotent input → "none").
- */
 export function diffPages(prev: Page | null, next: Page): DiffResult {
   if (!prev) {
     return { bump: "minor", changes: ["initial release"] };
@@ -33,22 +23,20 @@ export function diffPages(prev: Page | null, next: Page): DiffResult {
   const prevById = new Map(prev.sections.map((s) => [s.id, s]));
   const nextById = new Map(next.sections.map((s) => [s.id, s]));
 
-  // Removed sections → major
   for (const [id, ps] of prevById) {
     if (!nextById.has(id)) raise("major", `removed section "${id}" (${ps.type})`);
   }
-  // Added sections → minor
+
   for (const [id, ns] of nextById) {
     if (!prevById.has(id)) raise("minor", `added section "${id}" (${ns.type})`);
   }
-  // Sections present in both → compare type + props
   for (const [id, ns] of nextById) {
     const ps = prevById.get(id);
     if (!ps) continue;
 
     if (ps.type !== ns.type) {
       raise("major", `changed type of "${id}": ${ps.type} → ${ns.type}`);
-      continue; // a type change makes prop comparison meaningless
+      continue; 
     }
 
     const prevKeys = Object.keys(ps.props);
@@ -69,7 +57,6 @@ export function diffPages(prev: Page | null, next: Page): DiffResult {
     }
   }
 
-  // Reorder (same set of ids, different sequence) → patch
   const prevOrder = prev.sections.map((s) => s.id);
   const nextOrder = next.sections.map((s) => s.id);
   if (
@@ -80,13 +67,11 @@ export function diffPages(prev: Page | null, next: Page): DiffResult {
     raise("patch", "reordered sections");
   }
 
-  // Title change → patch
   if (prev.title !== next.title) raise("patch", "changed page title");
 
   return { bump, changes };
 }
 
-/** Compute the next semantic version string from a bump. */
 export function nextVersion(current: string, bump: Bump): string {
   const [maj, min, pat] = current.split(".").map(Number);
   switch (bump) {
@@ -97,6 +82,6 @@ export function nextVersion(current: string, bump: Bump): string {
     case "patch":
       return `${maj}.${min}.${pat + 1}`;
     default:
-      return current; // "none" is idempotent — no version change
+      return current; 
   }
 }

@@ -19,14 +19,11 @@ export function StoreProvider({
   initialPage: Page;
   children: React.ReactNode;
 }) {
-  // Deterministic: server AND client both start from initialPage → no hydration mismatch.
   const [store] = useState(() => {
     const s = makeStore();
     s.dispatch(setPage(initialPage));
     return s;
   });
-
-  // AFTER mount (client only): overlay any persisted draft.
   const hydrated = useRef(false);
   useEffect(() => {
     if (hydrated.current) return;
@@ -36,13 +33,9 @@ export function StoreProvider({
       try {
         const parsed = pageSchema.safeParse(JSON.parse(saved));
         if (parsed.success) store.dispatch(setPage(parsed.data));
-      } catch {
-        /* corrupt JSON — ignore, keep server page */
-      }
+      } catch {}
     }
   }, [store, slug]);
-
-  // Persist draftPage on every change.
   useEffect(() => {
     const unsubscribe = store.subscribe(() => {
       const { page } = store.getState().draftPage;

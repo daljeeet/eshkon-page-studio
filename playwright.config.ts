@@ -15,8 +15,6 @@ export default defineConfig({
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    // CI builds first (see ci.yml), then this starts the production server.
-    // Locally, an already-running `npm run dev` is reused.
     command: "npm run start",
     url: `${baseURL}/preview/hello`,
     reuseExistingServer: !process.env.CI,

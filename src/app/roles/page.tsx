@@ -1,11 +1,13 @@
 import { cookies } from "next/headers";
 import { getRole } from "@/lib/rbac";
+import { getAllSlugs } from "@/lib/contentfulClient";
 import { RoleSwitcher } from "@/components/RoleSwitcher";
 
 export const metadata = { title: "Role switcher · Page Studio" };
 
 export default async function RolesPage() {
   const role = getRole((await cookies()).get("role")?.value);
+  const [sampleSlug] = await getAllSlugs();
 
   return (
     <main className="mx-auto max-w-lg space-y-6 p-8">
@@ -18,7 +20,7 @@ export default async function RolesPage() {
           request. UI is never the security boundary.
         </p>
       </div>
-      <RoleSwitcher current={role} />
+      <RoleSwitcher current={role} sampleSlug={sampleSlug} />
     </main>
   );
 }

@@ -6,7 +6,6 @@ interface DraftState {
 }
 const initialState: DraftState = { page: null };
 
-// Default props per section type so "Add section" produces valid data.
 const defaultProps: Record<SectionType, Record<string, unknown>> = {
   hero: { heading: "New heading", subheading: "" },
   cta: { label: "Get started", url: "https://example.com" },

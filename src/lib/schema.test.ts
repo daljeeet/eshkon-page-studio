@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pageSchema } from "./schema";
+import { pageSchema, pageEnvelopeSchema, sectionSchema } from "./schema";
 
 const validPage = {
   pageId: "p1",
@@ -38,5 +38,31 @@ describe("pageSchema", () => {
 
   it("rejects a page missing required top-level fields", () => {
     expect(pageSchema.safeParse({ slug: "home" }).success).toBe(false);
+  });
+});
+
+describe("resilient rendering contract", () => {
+  const withBadSection = {
+    pageId: "p1",
+    slug: "home",
+    title: "Home",
+    sections: [
+      { id: "hero-1", type: "hero", props: { heading: "Hi" } },
+      { id: "bad-1", type: "carousel", props: {} }, // unsupported type
+    ],
+  };
+
+  it("strict pageSchema rejects a page containing an unsupported section", () => {
+    expect(pageSchema.safeParse(withBadSection).success).toBe(false);
+  });
+
+  it("lenient envelope still accepts it (sections validated per-item later)", () => {
+    expect(pageEnvelopeSchema.safeParse(withBadSection).success).toBe(true);
+  });
+
+  it("per-section schema flags the unsupported section so it can fall back", () => {
+    const [good, bad] = withBadSection.sections;
+    expect(sectionSchema.safeParse(good).success).toBe(true);
+    expect(sectionSchema.safeParse(bad).success).toBe(false);
   });
 });

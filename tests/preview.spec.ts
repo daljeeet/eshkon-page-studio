@@ -25,6 +25,22 @@ test.describe("Preview page", () => {
     await expect(cta).toBeFocused();
   });
 
+  test("a single unsupported/invalid section does not blank the page", async ({
+    page,
+  }) => {
+    const res = await page.goto("/preview/broken");
+    expect(res?.status()).toBe(200); // no server crash
+
+    // Valid sections still render…
+    await expect(
+      page.getByRole("heading", { name: /launch landing pages/i }),
+    ).toBeVisible();
+    await expect(page.getByRole("link", { name: /get started/i })).toBeVisible();
+
+    // …and the bad section degrades to a fallback instead of taking down the page.
+    await expect(page.getByText(/unsupported section/i)).toBeVisible();
+  });
+
   test("has no critical accessibility violations (axe)", async ({ page }) => {
     await page.goto("/preview/hello");
 
