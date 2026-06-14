@@ -222,9 +222,28 @@ Latest local run: **0 violations**. The report is uploaded as a CI artifact.
 
 ## Deploying to Vercel
 
-1. Import the repo in Vercel.
-2. Add `CONTENTFUL_*` env vars in Project Settings.
-3. Vercel's Git integration builds on push (App Router auto-detected).
+The repo ships a deploy workflow (`.github/workflows/deploy.yml`) that deploys to Vercel
+production on every push to `main` via the Vercel CLI.
+
+**One-time setup:**
+
+1. Create the Vercel project and link it locally (generates `.vercel/project.json`):
+   ```bash
+   vercel link
+   ```
+2. Add the `CONTENTFUL_*` env vars to the Vercel **project** (Settings → Environment
+   Variables, Production). `vercel pull` reads these at build time.
+3. Create a Vercel access token at <https://vercel.com/account/tokens>.
+4. Add three GitHub repo secrets (Settings → Secrets and variables → Actions):
+   | Secret | Value |
+   |---|---|
+   | `VERCEL_TOKEN` | the token from step 3 |
+   | `VERCEL_ORG_ID` | `orgId` from `.vercel/project.json` |
+   | `VERCEL_PROJECT_ID` | `projectId` from `.vercel/project.json` |
+
+After that, pushes to `main` auto-deploy. The live URL is shown in the Vercel dashboard
+(`https://<project>.vercel.app`). Alternatively, skip the workflow and use Vercel's native
+Git integration — both achieve continuous deployment.
 
 (Publishing writes to disk, so it is demonstrated locally/CI; see trade-offs.)
 

@@ -5,12 +5,9 @@ import { can, getRole } from "@/lib/rbac";
 import { diffPages, nextVersion } from "@/lib/semver";
 import { getLatestSnapshot, writeSnapshot, type Snapshot } from "@/lib/releases";
 
-// Needs the Node runtime for filesystem (snapshot) access.
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  // RBAC action enforcement — independent of any UI. A non-publisher cannot
-  // publish even via a direct request (this is the real security boundary).
   const role = getRole((await cookies()).get("role")?.value);
   if (!can.publish(role)) {
     return NextResponse.json(
@@ -32,7 +29,7 @@ export async function POST(req: NextRequest) {
   const latest = await getLatestSnapshot(page.slug);
   const { bump, changes } = diffPages(latest?.page ?? null, page);
 
-  // Idempotent publish: an unchanged draft does NOT create a new version.
+  // if the draft is unchanged 
   if (bump === "none" && latest) {
     return NextResponse.json({
       version: latest.version,

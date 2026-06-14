@@ -41,11 +41,6 @@ export async function getLatestSnapshot(slug: string): Promise<Snapshot | null> 
     return null;
   }
 }
-
-/**
- * Persist an immutable snapshot to releases/<slug>/<version>.json.
- * Refuses to overwrite an existing version (immutability guarantee).
- */
 export async function writeSnapshot(snapshot: Snapshot): Promise<void> {
   const dir = dirFor(snapshot.slug);
   await fs.mkdir(dir, { recursive: true });
@@ -54,7 +49,6 @@ export async function writeSnapshot(snapshot: Snapshot): Promise<void> {
     await fs.access(file);
     throw new Error(`Version ${snapshot.version} already exists and is immutable`);
   } catch (e) {
-    // access() throws if the file does NOT exist — that's the happy path.
     if (e instanceof Error && e.message.includes("immutable")) throw e;
   }
   await fs.writeFile(file, JSON.stringify(snapshot, null, 2) + "\n", "utf8");

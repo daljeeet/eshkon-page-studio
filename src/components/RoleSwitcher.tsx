@@ -10,19 +10,27 @@ const ROLES: { role: Role; desc: string }[] = [
   { role: "publisher", desc: "Edit drafts and publish versioned releases." },
 ];
 
-// Simulated identity. Enforcement is server-side (proxy + publish action);
-// this cookie just carries the role to the next request.
 function persistRole(role: Role) {
   document.cookie = `role=${role}; path=/; max-age=31536000`;
 }
 
-export function RoleSwitcher({ current }: { current: Role }) {
+export function RoleSwitcher({
+  current,
+  sampleSlug,
+}: {
+  current: Role;
+  sampleSlug?: string;
+}) {
   const [active, setActive] = useState<Role>(current);
 
   const setRole = (role: Role) => {
     persistRole(role);
     setActive(role);
   };
+
+  // Link to a real slug discovered from Contentful; fall back to the home index.
+  const studioHref = sampleSlug ? `/studio/${sampleSlug}` : "/";
+  const previewHref = sampleSlug ? `/preview/${sampleSlug}` : "/";
 
   return (
     <div className="space-y-4">
@@ -55,12 +63,12 @@ export function RoleSwitcher({ current }: { current: Role }) {
 
       <p aria-live="polite" className="text-sm text-muted-foreground">
         Active role: <strong>{active}</strong>. Try{" "}
-        <Link className="underline focus-visible:outline-2" href="/studio/hello">
-          /studio/hello
+        <Link className="underline focus-visible:outline-2" href={studioHref}>
+          {studioHref}
         </Link>{" "}
         or{" "}
-        <Link className="underline focus-visible:outline-2" href="/preview/hello">
-          /preview/hello
+        <Link className="underline focus-visible:outline-2" href={previewHref}>
+          {previewHref}
         </Link>
         .
       </p>

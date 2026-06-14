@@ -130,6 +130,14 @@
   outline-offset: 2px;
 }
 
+/* Form controls already show their own focus ring (see ui/input.tsx).
+   Suppress the global outline on them to avoid a doubled, floating ring. */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
