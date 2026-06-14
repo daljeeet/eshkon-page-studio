@@ -21,30 +21,31 @@ npm run dev                        # http://localhost:3000
 ```
 
 Open:
+
 - **Preview** — `/preview/<slug>` (e.g. `/preview/hello`)
 - **Studio** — `/studio/<slug>` (requires an `editor`/`publisher` role cookie — see RBAC)
 
 ### Environment variables
 
-| Var | Where to find it (Contentful → Settings → API keys) |
-|---|---|
-| `CONTENTFUL_SPACE_ID` | Space ID |
-| `CONTENTFUL_ENVIRONMENT` | usually `master` |
-| `CONTENTFUL_DELIVERY_TOKEN` | Content Delivery API access token |
-| `CONTENTFUL_PREVIEW_TOKEN` | Content Preview API access token |
+| Var                         | Where to find it (Contentful → Settings → API keys) |
+| --------------------------- | --------------------------------------------------- |
+| `CONTENTFUL_SPACE_ID`       | Space ID                                            |
+| `CONTENTFUL_ENVIRONMENT`    | usually `master`                                    |
+| `CONTENTFUL_DELIVERY_TOKEN` | Content Delivery API access token                   |
+| `CONTENTFUL_PREVIEW_TOKEN`  | Content Preview API access token                    |
 
 Set `USE_MOCK_CONTENT=true` to bypass Contentful and serve a deterministic fixture
 (used by CI / e2e so tests don't need credentials).
 
 ### Scripts
 
-| Script | Purpose |
-|---|---|
-| `npm run dev` / `build` / `start` | Next.js dev / production build / serve |
-| `npm run lint` | ESLint |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm run test:unit` | Vitest — schema + SemVer logic |
-| `npm run test:e2e` | Playwright + axe (writes `a11y-report.json`) |
+| Script                            | Purpose                                      |
+| --------------------------------- | -------------------------------------------- |
+| `npm run dev` / `build` / `start` | Next.js dev / production build / serve       |
+| `npm run lint`                    | ESLint                                       |
+| `npm run typecheck`               | `tsc --noEmit`                               |
+| `npm run test:unit`               | Vitest — schema + SemVer logic               |
+| `npm run test:e2e`                | Playwright + axe (writes `a11y-report.json`) |
 
 ---
 
@@ -66,6 +67,7 @@ Contentful ──► contentfulClient.ts (adapter) ──► pageSchema (Zod, bo
 ```
 
 Key boundaries:
+
 - **Schema is the contract.** All external data is validated with Zod (`src/lib/schema.ts`)
   at the boundary. Page structure is validated centrally; per-section props are validated
   inside each component, so a single malformed section degrades to a fallback instead of
@@ -80,22 +82,22 @@ Key boundaries:
 
 ### Directory map
 
-| Path | Responsibility |
-|---|---|
-| `src/lib/schema.ts` | Zod `pageSchema` / `sectionSchema`; `Page`/`Section`/`SectionType` types |
-| `src/lib/sectionRegistry.ts` | Single typed section registry |
-| `src/lib/sectionProps.ts` | Per-type prop schemas (validated inside components) |
-| `src/lib/contentfulClient.ts` | Contentful adapter (draft vs published, mock fallback) |
-| `src/lib/semver.ts` | Deterministic diff + version bump logic |
-| `src/lib/releases.ts` | Immutable snapshot read/write (`releases/<slug>/<version>.json`) |
-| `src/lib/rbac.ts` | Roles + capability checks |
-| `src/proxy.ts` | Server-side route gate (Next 16 middleware) |
-| `src/app/preview/[slug]` | Schema-driven rendered page |
-| `src/app/studio/[slug]` | Studio editor |
-| `src/app/api/publish` | RBAC-protected publish endpoint |
-| `src/store/*` | Redux slices + provider |
-| `src/components/sections/*` | Section components + fallbacks |
-| `src/components/studio/*` | Studio UI (list, editor, publish panel) |
+| Path                          | Responsibility                                                           |
+| ----------------------------- | ------------------------------------------------------------------------ |
+| `src/lib/schema.ts`           | Zod `pageSchema` / `sectionSchema`; `Page`/`Section`/`SectionType` types |
+| `src/lib/sectionRegistry.ts`  | Single typed section registry                                            |
+| `src/lib/sectionProps.ts`     | Per-type prop schemas (validated inside components)                      |
+| `src/lib/contentfulClient.ts` | Contentful adapter (draft vs published, mock fallback)                   |
+| `src/lib/semver.ts`           | Deterministic diff + version bump logic                                  |
+| `src/lib/releases.ts`         | Immutable snapshot read/write (`releases/<slug>/<version>.json`)         |
+| `src/lib/rbac.ts`             | Roles + capability checks                                                |
+| `src/proxy.ts`                | Server-side route gate (Next 16 middleware)                              |
+| `src/app/preview/[slug]`      | Schema-driven rendered page                                              |
+| `src/app/studio/[slug]`       | Studio editor                                                            |
+| `src/app/api/publish`         | RBAC-protected publish endpoint                                          |
+| `src/store/*`                 | Redux slices + provider                                                  |
+| `src/components/sections/*`   | Section components + fallbacks                                           |
+| `src/components/studio/*`     | Studio UI (list, editor, publish panel)                                  |
 
 ---
 
@@ -103,11 +105,11 @@ Key boundaries:
 
 All state lives in Redux Toolkit; there is no mutation of page state outside dispatched actions.
 
-| Slice | State | Reducers |
-|---|---|---|
-| **draftPage** | the page being edited (`page: Page \| null`) | `setPage`, `addSection`, `removeSection`, `reorderSection`, `updateSectionProps` |
-| **ui** | ephemeral editor UI (`selectedSectionId`) | `selectSection` |
-| **publish** | publish lifecycle (`status`, `version`, `bump`, `changelog`, `error`) | `publishStarted`, `publishSucceeded`, `publishFailed`, `resetPublish` |
+| Slice         | State                                                                 | Reducers                                                                         |
+| ------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **draftPage** | the page being edited (`page: Page \| null`)                          | `setPage`, `addSection`, `removeSection`, `reorderSection`, `updateSectionProps` |
+| **ui**        | ephemeral editor UI (`selectedSectionId`)                             | `selectSection`                                                                  |
+| **publish**   | publish lifecycle (`status`, `version`, `bump`, `changelog`, `error`) | `publishStarted`, `publishSucceeded`, `publishFailed`, `resetPublish`            |
 
 - The store is created **per request** (`makeStore`) and provided via `StoreProvider`.
 - **Persistence:** `StoreProvider` hydrates from `initialPage` (deterministic, SSR-safe),
@@ -122,16 +124,17 @@ All state lives in Redux Toolkit; there is no mutation of page state outside dis
 
 **Content type `page`** with fields:
 
-| Field ID | Type | Notes |
-|---|---|---|
-| `slug` | Short text | used in the URL |
-| `title` | Short text | |
+| Field ID   | Type            | Notes                          |
+| ---------- | --------------- | ------------------------------ |
+| `slug`     | Short text      | used in the URL                |
+| `title`    | Short text      |                                |
 | `sections` | **JSON object** | array of `{ id, type, props }` |
 
 `sections` is modelled as a single JSON field for speed of delivery. The richer
 alternative (each section as its own linked entry) is noted under trade-offs.
 
 **Adapter (`contentfulClient.ts`):**
+
 - Chooses the Delivery or Preview API + host based on a `preview` flag — this is the only
   place draft vs published is decided.
 - Maps the Contentful entry to our domain shape `{ pageId, slug, title, sections }`.
@@ -152,15 +155,16 @@ alternative (each section as its own linked entry) is noted under trade-offs.
 2. **Validate** the submitted draft with `pageSchema` (`400` on failure).
 3. **Diff** against the latest snapshot (`diffPages`, `src/lib/semver.ts`):
 
-   | Change | Bump |
-   |---|---|
-   | text / prop value change, reorder, title change | **patch** |
-   | add section / add prop | **minor** |
-   | remove section / change type / remove prop | **major** |
-   | no change | **none** (idempotent) |
+   | Change                                          | Bump                  |
+   | ----------------------------------------------- | --------------------- |
+   | text / prop value change, reorder, title change | **patch**             |
+   | add section / add prop                          | **minor**             |
+   | remove section / change type / remove prop      | **major**             |
+   | no change                                       | **none** (idempotent) |
 
    When several changes occur, the highest bump wins. The diff is order-independent, so the
    same draft always yields the same result.
+
 4. **Idempotent:** if the diff is `none`, the existing version is returned and **no new
    snapshot is written**.
 5. **Snapshot:** otherwise compute the next version and write an **immutable**
@@ -197,7 +201,7 @@ Latest local run: **0 violations**. The report is uploaded as a CI artifact.
 
 ## 6. What is incomplete / deliberately scoped
 
-- **Auth is simulated** via an unsigned `role` cookie. The enforcement *pattern*
+- **Auth is simulated** via an unsigned `role` cookie. The enforcement _pattern_
   (server-side route gate + independent action check) is real; production would use a
   signed session / JWT from an IdP.
 - **Snapshot persistence is filesystem-based** — works locally and in CI, not on Vercel's
@@ -205,7 +209,7 @@ Latest local run: **0 violations**. The report is uploaded as a CI artifact.
 - **Contentful model** uses a single JSON `sections` field rather than linked section
   entries.
 - **Studio prop editing** is limited to Hero text and CTA label/URL, per the brief.
-- **AAA is targeted, not fully audited** — axe enforces *critical* violations; full AAA
+- **AAA is targeted, not fully audited** — axe enforces _critical_ violations; full AAA
   (e.g. 7:1 contrast everywhere) is not exhaustively verified.
 - **SemVer "required prop"** is treated as prop-key presence rather than reading each
   type's required keys from its Zod schema.
@@ -249,11 +253,8 @@ Git integration — both achieve continuous deployment.
 
 ## Roles (local)
 
-Set the role cookie in the browser console, then reload:
-
-```js
-document.cookie = "role=publisher; path=/"; // or editor / viewer
-```
+select the role from "/roles"
+click the "Try /studio/[slug] or /preview/[slug] to go to respective pages.
 
 - `viewer` → preview only (blocked from `/studio`, redirected to the preview)
 - `editor` → edit the draft

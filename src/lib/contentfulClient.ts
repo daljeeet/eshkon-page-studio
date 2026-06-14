@@ -44,10 +44,6 @@ export async function getPage(slug: string, preview = false): Promise<unknown> {
   };
 }
 
-/**
- * Lists the slugs of all published pages, so the app can discover pages
- * dynamically instead of hard-coding any single slug.
- */
 export async function getAllSlugs(): Promise<string[]> {
   if (process.env.USE_MOCK_CONTENT === "true") {
     return ["hello"];
