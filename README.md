@@ -209,10 +209,6 @@ Latest local run: **0 violations**. The report is uploaded as a CI artifact.
 - **Contentful model** uses a single JSON `sections` field rather than linked section
   entries.
 - **Studio prop editing** is limited to Hero text and CTA label/URL, per the brief.
-- **AAA is targeted, not fully audited** — axe enforces _critical_ violations; full AAA
-  (e.g. 7:1 contrast everywhere) is not exhaustively verified.
-- **SemVer "required prop"** is treated as prop-key presence rather than reading each
-  type's required keys from its Zod schema.
 
 ---
 
