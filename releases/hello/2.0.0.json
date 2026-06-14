@@ -1,0 +1,73 @@
+{
+  "version": "2.0.0",
+  "slug": "hello",
+  "publishedAt": "2026-06-14T10:45:53.324Z",
+  "bump": "major",
+  "changelog": [
+    "[major] removed section \"testimonial-1\" (testimonial)",
+    "[minor] added section \"p6i6gjw0Tj5cgiLZs51pW\" (testimonial)",
+    "[minor] added section \"W9VBY07Zm8R2mqfQLs_kB\" (testimonial)"
+  ],
+  "page": {
+    "pageId": "aJZ4m8A3luI2qhZFV5gyx",
+    "slug": "hello",
+    "title": "This is Title",
+    "sections": [
+      {
+        "id": "hero-1",
+        "type": "hero",
+        "props": {
+          "eyebrow": "Page Studio",
+          "heading": "Launch landing pages in minutes",
+          "subheading": "Author in a lightweight studio, preview instantly, publish immutable versioned releases."
+        }
+      },
+      {
+        "id": "p6i6gjw0Tj5cgiLZs51pW",
+        "type": "testimonial",
+        "props": {
+          "quote": "Great product",
+          "author": "Anon"
+        }
+      },
+      {
+        "id": "features-1",
+        "type": "featureGrid",
+        "props": {
+          "heading": "Everything you need to ship",
+          "features": [
+            {
+              "title": "Schema-driven",
+              "body": "Pages render from a Zod-validated schema and a typed registry."
+            },
+            {
+              "title": "Versioned publishing",
+              "body": "Every publish is an immutable, SemVer-tagged snapshot."
+            },
+            {
+              "title": "Accessible by default",
+              "body": "Built and tested against WCAG 2.2 AAA targets."
+            }
+          ]
+        }
+      },
+      {
+        "id": "cta-1",
+        "type": "cta",
+        "props": {
+          "heading": "Ready to build your first page?",
+          "label": "Get started",
+          "url": "https://example.com"
+        }
+      },
+      {
+        "id": "W9VBY07Zm8R2mqfQLs_kB",
+        "type": "testimonial",
+        "props": {
+          "quote": "Great product",
+          "author": "Anon"
+        }
+      }
+    ]
+  }
+}

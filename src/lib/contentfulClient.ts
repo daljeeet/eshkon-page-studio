@@ -1,4 +1,5 @@
 import { createClient } from "contentful";
+import { mockPage } from "./mockContent";
 
 function client(preview: boolean) {
   return createClient({
@@ -13,6 +14,11 @@ function client(preview: boolean) {
 
 
 export async function getPage(slug: string, preview = false): Promise<unknown> {
+  // Deterministic fixture for tests/CI — keeps Contentful concerns in the adapter.
+  if (process.env.USE_MOCK_CONTENT === "true") {
+    return mockPage(slug);
+  }
+
   const res = await client(preview).getEntries({
     content_type: "page",
     "fields.slug": slug,
@@ -21,10 +27,22 @@ export async function getPage(slug: string, preview = false): Promise<unknown> {
   const entry = res.items[0];
   if (!entry) return null;
   const f = entry.fields as Record<string, unknown>;
+
+  // `sections` should be a JSON Object field (an array). Guard against it being
+  // stored as a JSON string so a misconfigured field doesn't crash validation.
+  let sections: unknown = f.sections ?? [];
+  if (typeof sections === "string") {
+    try {
+      sections = JSON.parse(sections);
+    } catch {
+      sections = [];
+    }
+  }
+
   return {
     pageId: entry.sys.id,
     slug: f.slug,
     title: f.title,
-    sections: f.sections ?? [],
+    sections,
   };
 }

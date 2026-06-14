@@ -1,0 +1,64 @@
+{
+  "version": "1.0.0",
+  "slug": "hello",
+  "publishedAt": "2026-06-14T10:28:25.820Z",
+  "bump": "minor",
+  "changelog": [
+    "initial release"
+  ],
+  "page": {
+    "pageId": "aJZ4m8A3luI2qhZFV5gyx",
+    "slug": "hello",
+    "title": "This is Title",
+    "sections": [
+      {
+        "id": "hero-1",
+        "type": "hero",
+        "props": {
+          "eyebrow": "Page Studio",
+          "heading": "Launch landing pages in minutes",
+          "subheading": "Author in a lightweight studio, preview instantly, publish immutable versioned releases."
+        }
+      },
+      {
+        "id": "features-1",
+        "type": "featureGrid",
+        "props": {
+          "heading": "Everything you need to ship",
+          "features": [
+            {
+              "title": "Schema-driven",
+              "body": "Pages render from a Zod-validated schema and a typed registry."
+            },
+            {
+              "title": "Versioned publishing",
+              "body": "Every publish is an immutable, SemVer-tagged snapshot."
+            },
+            {
+              "title": "Accessible by default",
+              "body": "Built and tested against WCAG 2.2 AAA targets."
+            }
+          ]
+        }
+      },
+      {
+        "id": "testimonial-1",
+        "type": "testimonial",
+        "props": {
+          "quote": "Page Studio cut our campaign launch time in half.",
+          "author": "Jane Doe",
+          "role": "Head of Growth, Acme"
+        }
+      },
+      {
+        "id": "cta-1",
+        "type": "cta",
+        "props": {
+          "heading": "Ready to build your first page?",
+          "label": "Get started",
+          "url": "https://example.com"
+        }
+      }
+    ]
+  }
+}
