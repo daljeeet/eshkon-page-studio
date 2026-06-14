@@ -28,7 +28,7 @@ export const SectionList = () => {
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <Select onValueChange={(v) => dispatch(addSection(v as SectionType))}>
-          <SelectTrigger aria-label="Add section" className="w-full">
+          <SelectTrigger aria-label="Add section" className="p-2 w-full">
             <SelectValue placeholder="Add section…" />
           </SelectTrigger>
           <SelectContent>
@@ -46,11 +46,11 @@ export const SectionList = () => {
           <li
             key={s.id}
             className={`flex items-center gap-2 rounded border p-2 ${
-              selectedId === s.id ? "ring-2 ring-primary" : ""
+              selectedId === s.id ? "ring ring-primary" : ""
             }`}
           >
             <button
-              className="flex-1 text-left focus-visible:outline focus-visible:outline-2"
+              className="flex-1 text-left focus-visible:outline cursor-pointer"
               onClick={() => dispatch(selectSection(s.id))}
               aria-pressed={selectedId === s.id}
             >
